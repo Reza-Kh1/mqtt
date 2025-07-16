@@ -2,12 +2,10 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 
 async function bootstrap() {
-const app = await NestFactory.create(AppModule, {
-  logger: ['log', 'debug', 'error', 'warn'],
-});
+  const app = await NestFactory.create(AppModule);
+
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -29,18 +27,7 @@ const app = await NestFactory.create(AppModule, {
     SwaggerModule.setup('api', app, document);
   }
 
-  app.connectMicroservice<MicroserviceOptions>({
-    transport: Transport.MQTT,
-    options: {
-      url: 'mqtt://localhost:1883',
-    },
-  });
-
-await app.startAllMicroservices()
-  .then(() => console.log('✅ Microservice MQTT وصل شد'))
-  .catch((err) => console.error('❌ اتصال به MQTT شکست خورد:', err));
   await app.listen(process.env.PORT ?? 3000);
-  
 }
 
 bootstrap();

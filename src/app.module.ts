@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
 
 import { ConfigModule } from '@nestjs/config';
-import { MqttService } from './mqtt/mqtt.service';
 import { AppController } from './app.controller';
+import { MqttService } from './mqtt/mqtt.service';
 
 @Module({
   imports: [ConfigModule.forRoot({ isGlobal: true })],
   controllers: [AppController],
-  providers: [MqttService],
+  providers: [ MqttService],
 })
-export class AppModule {}
+export class AppModule { }
