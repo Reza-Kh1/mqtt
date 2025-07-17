@@ -11,7 +11,7 @@ export class MqttService implements OnModuleInit {
   }
 
   private connectToBroker() {
-    this.client = mqtt.connect('mqtt://localhost:1883', {
+    this.client = mqtt.connect('mqtt://test.mosquitto.org:1883', {
       clientId: 'nest-client-' + Math.random().toString(16).substr(2, 8),
     });
 
@@ -24,9 +24,17 @@ export class MqttService implements OnModuleInit {
         }
       });
     });
-
+    this.client.subscribe('test/azizam', (err) => {
+      if (err) {
+        console.error('❌ Subscription error:', err);
+      } else {
+        console.log('📡 Subscribed to topic: test/hello');
+      }
+    });
     this.client.on('message', (topic, message) => {
-      console.log(`📨 Message received - Topic: ${topic}, Payload: ${message.toString()}`);
+      console.log(
+        `📨 Message received - Topic: ${topic}, Payload: ${message.toString()}`,
+      );
       // اینجا می‌تونی پیام رو به سایر سرویس‌ها یا WebSocket بفرستی
     });
 
